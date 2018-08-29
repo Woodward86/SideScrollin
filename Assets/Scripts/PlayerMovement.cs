@@ -24,10 +24,9 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         BetterJump();
-        TransformMovement();
     }
 
-
+    // TODO clamp forward and backward speed
     private void ForceMovement()
     {
         if (Input.GetKey(KeyCode.D))
@@ -44,6 +43,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+
     private void BetterJump()
     {
         if (rb.velocity.y < 0)
@@ -54,12 +54,6 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.velocity += Vector3.up * Physics.gravity.y * (lowJumpMultiplier - 1) * Time.fixedDeltaTime;
         }
-
     }
-
-
-    private void TransformMovement()
-    {
-        
-    }
+               
 }
