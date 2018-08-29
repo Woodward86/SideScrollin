@@ -3,7 +3,7 @@
 public class PlayerCollision : MonoBehaviour
 {
 
-    public PlayerMovement movement;
+    [SerializeField] PlayerMovement movement;
 
     void OnCollisionEnter(Collision collisionInfo)
     {

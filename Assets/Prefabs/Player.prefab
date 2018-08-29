@@ -137,7 +137,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c9f4f7f5b6c6c148a32be3e120eb102, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forwardForce: 40
-  backwardForce: -40
-  upwardForce: 100
+  forwardForce: 30
+  backwardForce: -30
+  jumpVelocity: 10
+  fallMultiplier: 2.5
+  lowJumpMultiplier: 2
   rb: {fileID: 54481815293899032}

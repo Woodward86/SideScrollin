@@ -1,20 +1,32 @@
 ﻿using UnityEngine;
 
+
 public class PlayerMovement : MonoBehaviour
 {
-
+    [Header("Horizontal Movement")]
     [SerializeField] float forwardForce = 40f;
     [SerializeField] float backwardForce = -40f;
-    [SerializeField] float upwardForce = 100f;
+
+    [Header("Jump")]
+    [SerializeField] float jumpVelocity = 10f;
+    [SerializeField] float fallMultiplier = 2.5f;
+    [SerializeField] float lowJumpMultiplier = 2f;
 
     public Rigidbody rb;
 
 	// Update is called once per frame
 	void FixedUpdate ()
     {
-        TransformMovement();
         ForceMovement();
     }
+
+
+    private void Update()
+    {
+        BetterJump();
+        TransformMovement();
+    }
+
 
     private void ForceMovement()
     {
@@ -26,15 +38,28 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.AddForce(backwardForce * Time.deltaTime, 0f, 0f, ForceMode.VelocityChange);
         }
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            rb.AddForce(0f, upwardForce * Time.deltaTime, 0f, ForceMode.VelocityChange); 
+            rb.velocity = Vector3.up * jumpVelocity; 
         }
+    }
+
+    private void BetterJump()
+    {
+        if (rb.velocity.y < 0)
+        {
+            rb.velocity += Vector3.up * Physics.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
+        }
+        else if (rb.velocity.y > 0 && !Input.GetKey(KeyCode.Space))
+        {
+            rb.velocity += Vector3.up * Physics.gravity.y * (lowJumpMultiplier - 1) * Time.fixedDeltaTime;
+        }
+
     }
 
 
     private void TransformMovement()
     {
-        // Try to build this out
+        
     }
 }
