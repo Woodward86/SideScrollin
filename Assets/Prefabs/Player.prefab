@@ -137,10 +137,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c9f4f7f5b6c6c148a32be3e120eb102, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forwardForce: 40
-  backwardForce: -40
+  rb: {fileID: 54481815293899032}
+  forwardForce: 3
+  backwardForce: 3
   speed: 5
   jumpVelocity: 10
   fallMultiplier: 4
   lowJumpMultiplier: 3
-  rb: {fileID: 54481815293899032}

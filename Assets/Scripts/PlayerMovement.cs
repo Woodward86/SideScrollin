@@ -6,8 +6,8 @@ public class PlayerMovement : MonoBehaviour
     public Rigidbody rb;
 
     [Header("Horizontal Movement")]
-    [SerializeField] float forwardForce = 40f;
-    [SerializeField] float backwardForce = -40f;
+    [SerializeField] float forwardForce = 3f;
+    [SerializeField] float backwardForce = 3f;
 
     // This is for TransformMovement()
     [SerializeField] float speed = 5f;
@@ -18,25 +18,33 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float lowJumpMultiplier = 2f;
     
     bool jumpRequest;
+    bool forwardRequest;
+    bool backwardRequest;
 
-	// Update is called once per frame
-	void FixedUpdate ()
+    private void Update()
+    {
+        MovementRequests();
+        TransformMovement();
+    }
+
+    // Update is called once per frame
+    void FixedUpdate ()
     {
         ForceApplication();
         BetterJump();
     }
 
-
-    private void Update()
-    {
-        TransformMovement();
-        MovementRequests();
-    }
-
     // TODO clamp forward and backward speed
-    // TODO finish refactoring inputs into MovementRequest() and addforce into ForceApplication() that works off boolean logic
     private void MovementRequests()
     {
+        if (Input.GetKey(KeyCode.D))
+        {
+            forwardRequest = true;
+        }
+        if (Input.GetKey(KeyCode.A))
+        {
+            backwardRequest = true;
+        }
         if (Input.GetKeyDown(KeyCode.Space))
         {
             jumpRequest = true;
@@ -46,13 +54,26 @@ public class PlayerMovement : MonoBehaviour
 
     private void ForceApplication()
     {
-        if (Input.GetKey(KeyCode.D))
+        if (forwardRequest)
         {
-            rb.AddForce(forwardForce * Time.deltaTime, 0f, 0f, ForceMode.Impulse);
+            // TODO figure out how to clamp added force
+            if (rb.velocity.x >= 0 && rb.velocity.x < 5)
+            {
+                rb.AddForce(Vector3.right * forwardForce * Time.deltaTime, ForceMode.Impulse);
+                forwardRequest = false;
+                print(rb.velocity.x);
+            }
+            if (rb.velocity.x >= 1)
+            {
+                rb.AddForce(Vector3.right * 0, ForceMode.Impulse);
+                print("Max velocity reached");
+                forwardRequest = false;
+            }
         }
-        if (Input.GetKey(KeyCode.A))
+        if (backwardRequest)
         {
-            rb.AddForce(backwardForce * Time.deltaTime, 0f, 0f, ForceMode.Impulse);
+            rb.AddForce(Vector3.left * backwardForce * Time.deltaTime, ForceMode.Impulse);
+            backwardRequest = false;
         }
         if (jumpRequest)
         {
@@ -74,12 +95,16 @@ public class PlayerMovement : MonoBehaviour
         }
     }
     
-    // TODO finish this for backward too
+    // TODO smooth these
     private void TransformMovement()
     {
-        if(Input.GetKey(KeyCode.H))
+        if (Input.GetKey(KeyCode.H))
         {
             transform.position += Vector3.right * Time.deltaTime * speed;
+        }
+        if (Input.GetKey(KeyCode.F))
+        {
+            transform.position += Vector3.left * Time.deltaTime * speed;
         }
     }
 }
