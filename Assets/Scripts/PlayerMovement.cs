@@ -6,16 +6,16 @@ public class PlayerMovement : MonoBehaviour
     public Rigidbody rb;
 
     [Header("Horizontal Movement")]
-    [SerializeField] float forwardForce = 3f;
-    [SerializeField] float backwardForce = 3f;
+    [SerializeField] float horizontalForce = 60f;
+    [SerializeField] float maxSpeed = 7.5f;
 
     // This is for TransformMovement()
-    [SerializeField] float speed = 5f;
+    [SerializeField] float speed = 6f;
 
     [Header("Jump")]
     [SerializeField] float jumpVelocity = 10f;
-    [SerializeField] float fallMultiplier = 2.5f;
-    [SerializeField] float lowJumpMultiplier = 2f;
+    [SerializeField] float fallMultiplier = 4f;
+    [SerializeField] float lowJumpMultiplier = 3f;
     
     bool jumpRequest;
     bool forwardRequest;
@@ -27,14 +27,14 @@ public class PlayerMovement : MonoBehaviour
         TransformMovement();
     }
 
-    // Update is called once per frame
+
     void FixedUpdate ()
     {
         ForceApplication();
         BetterJump();
     }
 
-    // TODO clamp forward and backward speed
+
     private void MovementRequests()
     {
         if (Input.GetKey(KeyCode.D))
@@ -52,28 +52,35 @@ public class PlayerMovement : MonoBehaviour
     }
 
 
+    //TODO movement feels a little floaty tweak sliders in game before reworking here
+    //TODO deceleration is to fast when when transitioning between in air max speed and running max speed 
     private void ForceApplication()
     {
         if (forwardRequest)
         {
-            // TODO figure out how to clamp added force
-            if (rb.velocity.x >= 0 && rb.velocity.x < 5)
+            if (rb.velocity.x == 0f || rb.velocity.x < maxSpeed)
             {
-                rb.AddForce(Vector3.right * forwardForce * Time.deltaTime, ForceMode.Impulse);
+                rb.AddForce(Vector3.right * horizontalForce * Time.deltaTime, ForceMode.Impulse);
                 forwardRequest = false;
-                print(rb.velocity.x);
             }
-            if (rb.velocity.x >= 1)
+            if (rb.velocity.x > maxSpeed)
             {
-                rb.AddForce(Vector3.right * 0, ForceMode.Impulse);
-                print("Max velocity reached");
+                rb.AddForce(Vector3.right * maxSpeed * Time.deltaTime, ForceMode.Impulse);
                 forwardRequest = false;
             }
         }
         if (backwardRequest)
         {
-            rb.AddForce(Vector3.left * backwardForce * Time.deltaTime, ForceMode.Impulse);
-            backwardRequest = false;
+            if (rb.velocity.x == 0f || rb.velocity.x > -maxSpeed)
+            {
+                rb.AddForce(Vector3.left * horizontalForce * Time.deltaTime, ForceMode.Impulse);
+                backwardRequest = false;
+            }
+            if (rb.velocity.x < -maxSpeed)
+            {
+                rb.AddForce(Vector3.left * maxSpeed * Time.deltaTime, ForceMode.Impulse);
+                backwardRequest = false;
+            }
         }
         if (jumpRequest)
         {
@@ -95,6 +102,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
     
+
     // TODO smooth these
     private void TransformMovement()
     {
@@ -102,7 +110,7 @@ public class PlayerMovement : MonoBehaviour
         {
             transform.position += Vector3.right * Time.deltaTime * speed;
         }
-        if (Input.GetKey(KeyCode.F))
+        else if (Input.GetKey(KeyCode.F))
         {
             transform.position += Vector3.left * Time.deltaTime * speed;
         }

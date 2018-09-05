@@ -138,9 +138,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 54481815293899032}
-  forwardForce: 3
-  backwardForce: 3
-  speed: 5
+  horizontalForce: 60
+  maxSpeed: 7.5
+  speed: 6
   jumpVelocity: 10
   fallMultiplier: 4
   lowJumpMultiplier: 3
