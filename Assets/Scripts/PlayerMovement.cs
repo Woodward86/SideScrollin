@@ -48,7 +48,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
 
-    //TODO holding jump feels to floaty
+    //TODO holding jump feels to floaty need to implement double jump and remove infinite jump
     //TODO deceleration is to fast when transitioning between in-air max speed and running max speed 
     private void ForceApplication()
     {
