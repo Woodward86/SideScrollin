@@ -9,9 +9,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float horizontalForce = 60f;
     [SerializeField] float maxSpeed = 7.5f;
 
-    // This is for TransformMovement()
-    [SerializeField] float speed = 6f;
-
     [Header("Jump")]
     [SerializeField] float jumpVelocity = 10f;
     [SerializeField] float fallMultiplier = 4f;
@@ -21,10 +18,9 @@ public class PlayerMovement : MonoBehaviour
     bool forwardRequest;
     bool backwardRequest;
 
-    private void Update()
+    void Update()
     {
         MovementRequests();
-        TransformMovement();
     }
 
 
@@ -52,8 +48,8 @@ public class PlayerMovement : MonoBehaviour
     }
 
 
-    //TODO movement feels a little floaty tweak sliders in game before reworking here
-    //TODO deceleration is to fast when when transitioning between in air max speed and running max speed 
+    //TODO holding jump feels to floaty
+    //TODO deceleration is to fast when transitioning between in-air max speed and running max speed 
     private void ForceApplication()
     {
         if (forwardRequest)
@@ -102,17 +98,4 @@ public class PlayerMovement : MonoBehaviour
         }
     }
     
-
-    // TODO smooth these
-    private void TransformMovement()
-    {
-        if (Input.GetKey(KeyCode.H))
-        {
-            transform.position += Vector3.right * Time.deltaTime * speed;
-        }
-        else if (Input.GetKey(KeyCode.F))
-        {
-            transform.position += Vector3.left * Time.deltaTime * speed;
-        }
-    }
 }
