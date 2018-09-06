@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 
 public class PlayerMovement : MonoBehaviour
@@ -6,17 +8,31 @@ public class PlayerMovement : MonoBehaviour
     public Rigidbody rb;
 
     [Header("Horizontal Movement")]
-    [SerializeField] float horizontalForce = 60f;
-    [SerializeField] float maxSpeed = 7.5f;
+    [SerializeField] float horizontalForce = 70f;
+    [SerializeField] float maxSpeed = 12f;
 
-    [Header("Jump")]
-    [SerializeField] float jumpVelocity = 10f;
-    [SerializeField] float fallMultiplier = 4f;
-    [SerializeField] float lowJumpMultiplier = 3f;
-    
-    bool jumpRequest;
     bool forwardRequest;
     bool backwardRequest;
+
+    [Header("Jump")]
+    [SerializeField] float jumpVelocity = 1000f;
+    [SerializeField] float fallMultiplier = 4f;
+    [SerializeField] float lowJumpMultiplier = 3f;
+    [SerializeField] float groundedSkin = 0.05f;
+    [SerializeField] LayerMask mask;
+
+    bool jumpRequest;
+    bool grounded;
+
+    Vector3 playerSize;
+    Vector3 boxSize;
+
+    private void Awake()
+    {
+        playerSize = GetComponent<BoxCollider>().size;
+        boxSize = new Vector3(playerSize.x, groundedSkin, playerSize.z);
+    }
+
 
     void Update()
     {
@@ -41,14 +57,14 @@ public class PlayerMovement : MonoBehaviour
         {
             backwardRequest = true;
         }
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && grounded)
         {
             jumpRequest = true;
         }
     }
 
 
-    //TODO holding jump feels to floaty need to implement double jump and remove infinite jump
+    //TODO holding jump feels to floaty need to implement double jump
     //TODO deceleration is to fast when transitioning between in-air max speed and running max speed 
     private void ForceApplication()
     {
@@ -80,8 +96,18 @@ public class PlayerMovement : MonoBehaviour
         }
         if (jumpRequest)
         {
-            rb.AddForce(Vector3.up * jumpVelocity, ForceMode.Impulse);
+            rb.AddForce(Vector3.up * jumpVelocity * Time.deltaTime, ForceMode.Impulse);
             jumpRequest = false;
+            grounded = false;
+        }
+        else
+        {
+            Vector3 boxCenter = transform.position + Vector3.down * (playerSize.y + boxSize.y) * 0.5f;
+            Collider[] hitColliders = Physics.OverlapBox(boxCenter, boxSize, Quaternion.identity, mask);
+            if (hitColliders.Length > 0)
+            {
+                grounded = true;
+            }
         }
     }
 
@@ -97,5 +123,5 @@ public class PlayerMovement : MonoBehaviour
             rb.velocity += Vector3.up * Physics.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
         }
     }
-    
+
 }

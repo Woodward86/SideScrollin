@@ -25,7 +25,7 @@ GameObject:
   - component: {fileID: 54481815293899032}
   - component: {fileID: 114975255474898444}
   - component: {fileID: 114624467491957148}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -100,7 +100,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 1
 --- !u!65 &65998666459901008
 BoxCollider:
@@ -140,6 +140,10 @@ MonoBehaviour:
   rb: {fileID: 54481815293899032}
   horizontalForce: 70
   maxSpeed: 12
-  jumpVelocity: 10
+  jumpVelocity: 1000
   fallMultiplier: 4
   lowJumpMultiplier: 3
+  groundedSkin: 0.05
+  mask:
+    serializedVersion: 2
+    m_Bits: 1
