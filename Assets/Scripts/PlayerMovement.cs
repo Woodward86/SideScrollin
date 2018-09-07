@@ -9,8 +9,10 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Horizontal Movement")]
     [SerializeField] float horizontalForce = 70f;
-    [SerializeField] float maxSpeed = 12f;
+    [SerializeField] float maxGroundSpeed = 12f;
+    [SerializeField] float maxAirSpeed = 5f;
 
+    float maxSpeed;
     bool forwardRequest;
     bool backwardRequest;
 
@@ -18,15 +20,18 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float jumpVelocity = 1000f;
     [SerializeField] float fallMultiplier = 4f;
     [SerializeField] float lowJumpMultiplier = 3f;
+    [SerializeField] int maxJumpNumber = 2;
     [SerializeField] float groundedSkin = 0.05f;
     [SerializeField] LayerMask mask;
 
     bool jumpRequest;
     bool grounded;
+    int jumpCounter;
 
     Vector3 playerSize;
     Vector3 boxSize;
 
+    
     private void Awake()
     {
         playerSize = GetComponent<BoxCollider>().size;
@@ -57,15 +62,15 @@ public class PlayerMovement : MonoBehaviour
         {
             backwardRequest = true;
         }
-        if (Input.GetKeyDown(KeyCode.Space) && grounded)
+        if (Input.GetKeyDown(KeyCode.Space) && grounded || Input.GetKeyDown(KeyCode.Space) && jumpCounter < maxJumpNumber)
         {
             jumpRequest = true;
         }
     }
 
-
-    //TODO holding jump feels to floaty need to implement double jump
-    //TODO deceleration is to fast when transitioning between in-air max speed and running max speed 
+ 
+    //TODO jump is way to high if player hits jump 2 times really quickly
+    //TODO player sticks to much when landing on ground 
     private void ForceApplication()
     {
         if (forwardRequest)
@@ -99,6 +104,8 @@ public class PlayerMovement : MonoBehaviour
             rb.AddForce(Vector3.up * jumpVelocity * Time.deltaTime, ForceMode.Impulse);
             jumpRequest = false;
             grounded = false;
+            maxSpeed = maxAirSpeed;
+            jumpCounter++;
         }
         else
         {
@@ -107,6 +114,8 @@ public class PlayerMovement : MonoBehaviour
             if (hitColliders.Length > 0)
             {
                 grounded = true;
+                maxSpeed = maxGroundSpeed;
+                jumpCounter = 0;
             }
         }
     }

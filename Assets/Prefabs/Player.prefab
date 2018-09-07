@@ -139,10 +139,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 54481815293899032}
   horizontalForce: 70
-  maxSpeed: 12
+  maxGroundSpeed: 12
+  maxAirSpeed: 8
   jumpVelocity: 1000
   fallMultiplier: 4
   lowJumpMultiplier: 3
+  maxJumpNumber: 2
   groundedSkin: 0.05
   mask:
     serializedVersion: 2

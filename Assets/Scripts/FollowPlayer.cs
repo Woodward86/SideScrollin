@@ -7,7 +7,8 @@ public class FollowPlayer : MonoBehaviour
     [SerializeField] Vector3 offset;
     [SerializeField] float averageingBlend = .1f;
 
-	// TODO create ease in and out function
+	// TODO make vertical camera movement and horizontal movement separate controls
+    // TODO when player reaches level boarders the camera needs to blend more towards ending
 	void Update ()
     {
         transform.position += (player.position + offset - transform.position) * averageingBlend * Time.deltaTime;
