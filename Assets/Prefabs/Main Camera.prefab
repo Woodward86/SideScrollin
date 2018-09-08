@@ -102,4 +102,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   offset: {x: 7.64, y: 3, z: -34.4}
-  averageingBlend: 1.75
+  verticleBlend: 2
+  horizontalBlend: 1.75
+  depthBlend: 0
