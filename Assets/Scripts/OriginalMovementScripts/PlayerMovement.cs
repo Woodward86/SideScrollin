@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
+[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(PlayerCollision))]
 public class PlayerMovement : MonoBehaviour
 {
     bool m_Started;
     public Rigidbody rb;
+    
 
     [Header("Horizontal Movement")]
     [SerializeField] float horizontalForce = 70f;
@@ -31,16 +33,14 @@ public class PlayerMovement : MonoBehaviour
     int jumpCounter;
     bool isGrounded;
     bool isWallSliding;
-    int wallFrameCounter;
+    float wallTimeCounter;
 
     Vector3 playerSize;
     Vector3 downBox;
     Vector3 frontBox;
     Vector3 backBox;
 
-    
 
-    
     private void Awake()
     {
         m_Started = true;
@@ -50,6 +50,9 @@ public class PlayerMovement : MonoBehaviour
         // TODO figure out why the boxes have to be so small to collide all the time
         frontBox = new Vector3(groundedSkin, playerSize.y - 0.8f, playerSize.z - 0.8f);
         backBox = new Vector3(groundedSkin, playerSize.y - 0.8f, playerSize.z - 0.8f);
+
+        rb.useGravity = true;
+        rb.constraints = RigidbodyConstraints.FreezeRotation;
     }
 
 
@@ -63,6 +66,7 @@ public class PlayerMovement : MonoBehaviour
     {
         ForceApplication();
         BetterJump();
+        WallJumps();
     }
 
 
@@ -123,6 +127,7 @@ public class PlayerMovement : MonoBehaviour
             rb.AddForce(Vector3.right * maxSpeed * Time.deltaTime, ForceMode.Impulse);
             forwardRequest = false;
         }
+ 
     }
 
 
@@ -153,42 +158,6 @@ public class PlayerMovement : MonoBehaviour
     }
 
 
-    private void ApplyGroundedState()
-    {
-        Vector3 downBoxCenter = transform.position + Vector3.down * (playerSize.y + downBox.y) * 0.5f;
-        Collider[] hitColliders = Physics.OverlapBox(downBoxCenter, downBox, Quaternion.identity, groundMask);
-        if (hitColliders.Length > 0)
-        {
-            isGrounded = true;
-            isWallSliding = false;
-            maxSpeed = maxGroundSpeed;
-            jumpCounter = 0;
-        }
-    }
-
-    // TODO build out wall slide state
-    // TODO jumping when on wall should push you away from the wall
-    // TODO using wallFrameCounter variable have a timer for how long you can hold on to walls without free falling down
-    private void ApplyWallSlideState()
-    {
-        Vector3 frontBoxCenter = transform.position + Vector3.right * (playerSize.x + frontBox.x) * 0.5f;
-        Collider[] frontColliders = Physics.OverlapBox(frontBoxCenter, frontBox, Quaternion.identity, wallMask);
-        Vector3 backBoxCenter = transform.position + Vector3.left * (playerSize.x + backBox.x) * 0.5f;
-        Collider[] backColliders = Physics.OverlapBox(backBoxCenter, backBox, Quaternion.identity, wallMask);
-
-        if (frontColliders.Length > 0 || backColliders.Length > 0)
-        {
-            isWallSliding = true;
-            isGrounded = false;
-            rb.velocity = Vector3.up * Physics.gravity.y * Time.deltaTime;
-        }
-        else
-        {
-            isWallSliding = false;
-        }
-    }
-
-
     private void BetterJump()
     {
         if (rb.velocity.y < 0)
@@ -200,6 +169,62 @@ public class PlayerMovement : MonoBehaviour
             rb.velocity += Vector3.up * Physics.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
         }
     }
+
+    // TODO build out wall jumps
+    private void WallJumps()
+    {
+        // TODO this should push you off the wall slightly before getting back on the wall
+        if (isWallSliding && Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.Space))
+        {
+            rb.AddForce(Vector3.right * jumpVelocity * Time.deltaTime, ForceMode.Impulse);
+            rb.AddForce(Vector3.up * jumpVelocity * Time.deltaTime, ForceMode.Impulse);
+            rb.AddForce(Vector3.left * jumpVelocity * Time.deltaTime, ForceMode.Impulse);
+        }
+    }
+
+
+    private void ApplyGroundedState()
+    {
+        Vector3 downBoxCenter = transform.position + Vector3.down * (playerSize.y + downBox.y) * 0.5f;
+        Collider[] hitColliders = Physics.OverlapBox(downBoxCenter, downBox, Quaternion.identity, groundMask);
+        if (hitColliders.Length > 0)
+        {
+            isGrounded = true;
+            maxSpeed = maxGroundSpeed;
+            jumpCounter = 0;
+            ResetWallSlideState();
+        }
+    }
+
+    // TODO using wallTimeCounter variable have a timer for how long you can hold on to walls without free falling down
+    private void ApplyWallSlideState()
+    {
+        Vector3 frontBoxCenter = transform.position + Vector3.right * (playerSize.x + frontBox.x) * 0.5f;
+        Collider[] frontColliders = Physics.OverlapBox(frontBoxCenter, frontBox, Quaternion.identity, wallMask);
+        Vector3 backBoxCenter = transform.position + Vector3.left * (playerSize.x + backBox.x) * 0.5f;
+        Collider[] backColliders = Physics.OverlapBox(backBoxCenter, backBox, Quaternion.identity, wallMask);
+
+        if (frontColliders.Length > 0 || backColliders.Length > 0)
+        {
+            wallTimeCounter += Time.deltaTime;
+            isWallSliding = true;
+            rb.velocity = Vector3.up * Physics.gravity.y * Time.deltaTime;
+            isGrounded = false;
+            Debug.Log(rb.velocity);
+        }
+        else
+        {
+            ResetWallSlideState();
+        }
+    }
+
+
+    private void ResetWallSlideState()
+    {
+        isWallSliding = false;
+        wallTimeCounter = 0.0f;
+    }
+
 
     private void OnDrawGizmos()
     {

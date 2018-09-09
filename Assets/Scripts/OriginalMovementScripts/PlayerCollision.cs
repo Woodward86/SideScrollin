@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
 
+
 public class PlayerCollision : MonoBehaviour
 {
-
-    // TODO move collision logic for grounded and wall slide states from player movement to here
 
     [SerializeField] PlayerMovement movement;
 
@@ -13,6 +12,7 @@ public class PlayerCollision : MonoBehaviour
         {
             movement.enabled = false;
         }
+
     }
 
 }
