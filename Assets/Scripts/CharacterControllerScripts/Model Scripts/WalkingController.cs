@@ -7,7 +7,8 @@ public enum FacingDirection
     Up, 
     Down,
     Left,
-    Right
+    Right,
+    Screen
 }
 
 
@@ -16,7 +17,7 @@ public class WalkingController : Controller
     //movement information
     Vector3 walkVelocity;
     Vector3 prevWalkVelocity;
-    FacingDirection facing;
+    FacingDirection facing = FacingDirection.Right;
     float adjVertVelocity;
     int jumpCounter;
     float jumpPressTime;
@@ -29,8 +30,20 @@ public class WalkingController : Controller
     public float fallMultiplier = 4f;
     public float lowJumpMultiplier = 3f;
 
+    //delegates and events
+    public delegate void FacingChangeHandler(FacingDirection fd);
+    public static event FacingChangeHandler OnFacingChange;
 
-    
+
+    void Start()
+    {
+        if(OnFacingChange != null)
+        {
+            OnFacingChange(facing);
+        }
+    }
+
+
     public override void ReadInput(InputData data)
     {
         prevWalkVelocity = walkVelocity;
@@ -145,7 +158,11 @@ public class WalkingController : Controller
             facing = (dir.x > 0) ? FacingDirection.Right : FacingDirection.Left;
         }
 
-        Debug.Log(facing);
+        if (OnFacingChange != null)
+        {
+            OnFacingChange(facing);
+        }
+
     }
 
 
