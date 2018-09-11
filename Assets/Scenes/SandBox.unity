@@ -3051,8 +3051,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkSpeed: 6
   jumpSpeed: 9
-  fallMultiplier: 4
+  fallMultiplier: 4.5
   lowJumpMultiplier: 3
+  wallStickTime: 1
+  wallSlideSpeed: 3
 --- !u!114 &1875267215
 MonoBehaviour:
   m_ObjectHideFlags: 0

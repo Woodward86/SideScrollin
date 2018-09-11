@@ -24,7 +24,7 @@ public class PlayerHitbox : MonoBehaviour {
         {
             default:
                 col.center = Vector3.right * offset;
-                Debug.Log(fd);
+                //Debug.Log(fd);
                 break;
         }
 
