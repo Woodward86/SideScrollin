@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 
+
+[RequireComponent(typeof(Transform))]
 public class FollowPlayer : MonoBehaviour
 {
 
@@ -9,8 +11,9 @@ public class FollowPlayer : MonoBehaviour
     [SerializeField] float horizontalBlend = 1.75f;
     [SerializeField] float depthBlend = 0f;
 
+
     // TODO when player reaches level boarders the camera needs to blend more towards ending
-	void Update ()
+    void Update ()
     {
         float horizontalPosition = (player.position.x + offset.x - transform.position.x) * horizontalBlend;
         float verticalPosition = (player.position.y + offset.y - transform.position.y) * verticleBlend;

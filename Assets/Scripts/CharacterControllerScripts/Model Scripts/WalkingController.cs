@@ -34,10 +34,15 @@ public class WalkingController : Controller
     public float lowJumpMultiplier = 3f;
     public float wallStickTime = 1f;
     public float wallSlideSpeed = 3f;
+    public float interactDuration = 0.1f;
+    public LayerMask rayCastIgnore;
 
     //delegates and events
-    public delegate void FacingChangeHandler(FacingDirection fd);
+    public delegate void FacingChangeHandler (FacingDirection fd);
     public static event FacingChangeHandler OnFacingChange;
+    public delegate void HitboxEventHandler (float dur);
+    public static event HitboxEventHandler OnInteract;
+
 
 
     void Start()
@@ -78,7 +83,6 @@ public class WalkingController : Controller
                     //TODO: decide if this should be more of an added horizontal force then vertical
                     if (isWallSliding && facing.Equals(FacingDirection.Right))
                     {
-                        Debug.Log("jump away from wall");
                         adjVertVelocity = jumpSpeed * 1.25f;
                     }
                 }
@@ -90,6 +94,16 @@ public class WalkingController : Controller
         {
             jumpPressTime = 0f;
             jumpRequest = false;
+        }
+
+        //TODO: in the air this activates wallSlide
+        //check if interact button is pressed
+        if (data.buttons[1] == true)
+        {
+            if (OnInteract != null)
+            {
+                OnInteract(interactDuration);
+            }
         }
 
         newInput = true;
@@ -133,7 +147,7 @@ public class WalkingController : Controller
     //TODO: add collider "skin" public variable
     void TestGroundedState()
     {
-        if (Physics.Raycast(transform.position, Vector3.down, coll.bounds.extents.y + 0.1f))
+        if (Physics.Raycast(transform.position, Vector3.down, coll.bounds.extents.y + 0.1f, ~rayCastIgnore))
         {
             isGrounded = true;
             jumpCounter = 0;
@@ -147,8 +161,8 @@ public class WalkingController : Controller
 
     void TestWallSlidingState()
     {
-        bool isContactRight = Physics.Raycast(transform.position, Vector3.right, coll.bounds.extents.x + 0.1f);
-        bool isContactLeft = Physics.Raycast(transform.position, Vector3.left, coll.bounds.extents.x + 0.1f);
+        bool isContactRight = Physics.Raycast(transform.position, Vector3.right, coll.bounds.extents.x + 0.1f, ~rayCastIgnore);
+        bool isContactLeft = Physics.Raycast(transform.position, Vector3.left, coll.bounds.extents.x + 0.1f, ~rayCastIgnore);
 
         if (isContactRight || isContactLeft && !isGrounded)
         {
