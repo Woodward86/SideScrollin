@@ -13,7 +13,7 @@ public class InputManager : MonoBehaviour
 
     public void PassInput(InputData data)
     {
-        //Debug.Log("Movement: " + data.axes[0] + ", " + data.axes[1]);
+        Debug.Log("Movement: " + data.axes[0] + ", " + data.axes[1]);
         controller.ReadInput(data);
     }
 

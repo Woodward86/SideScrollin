@@ -4,7 +4,6 @@
 [RequireComponent(typeof(Transform))]
 public class FollowPlayer : MonoBehaviour
 {
-
     [SerializeField] Transform player;
     [SerializeField] Vector3 offset;
     [SerializeField] float verticleBlend = 10f;
@@ -12,7 +11,6 @@ public class FollowPlayer : MonoBehaviour
     [SerializeField] float depthBlend = 0f;
 
 
-    // TODO when player reaches level boarders the camera needs to blend more towards ending
     void Update ()
     {
         float horizontalPosition = (player.position.x + offset.x - transform.position.x) * horizontalBlend;

@@ -15,14 +15,21 @@ public abstract class Controller : MonoBehaviour
     protected Rigidbody rb;
     protected Collider coll;
     protected FacingController fc;
+    protected Camera pc;
     protected bool newInput;
+
+    protected bool started;
 
     void Awake()
     {
+        started = true;
         rb = GetComponent<Rigidbody>();
         coll = GetComponent<Collider>();
         fc = GetComponent<FacingController>();
+        pc = GameObject.FindGameObjectWithTag("PlayerCamera").GetComponent<Camera>() as Camera;
 
+        //TODO: need to move this to a GameState controller
+        Camera.main.enabled = false;
+        pc.enabled = true;
     }
-
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public enum FacingDirection
 {
     Up, 
@@ -14,6 +15,13 @@ public enum FacingDirection
 
 public class WalkingController : Controller
 {
+
+    //camera
+    [SerializeField] Vector3 offset;
+    [SerializeField] float verticleBlend = 10f;
+    [SerializeField] float horizontalBlend = 1.75f;
+    [SerializeField] float depthBlend = 0f;
+
     //movement information
     Vector3 walkVelocity;
     Vector3 prevWalkVelocity;
@@ -42,7 +50,6 @@ public class WalkingController : Controller
     public static event FacingChangeHandler OnFacingChange;
     public delegate void HitboxEventHandler (float dur);
     public static event HitboxEventHandler OnInteract;
-
 
 
     void Start()
@@ -130,7 +137,10 @@ public class WalkingController : Controller
             TestGroundedState();
             TestWallSlidingState();
         }
- 
+
+        // camera movement
+        CameraMovement();
+
         // basic movement
         rb.velocity = new Vector3(walkVelocity.x, rb.velocity.y + adjVertVelocity, walkVelocity.z);
 
@@ -140,6 +150,15 @@ public class WalkingController : Controller
 
 
         newInput = false;
+    }
+
+    //TODO: have this work off boxes on screen to trigger camera follow
+    void CameraMovement()
+    {
+        float horizontalPosition = (transform.position.x + offset.x - pc.transform.position.x) * horizontalBlend;
+        float verticalPosition = (transform.position.y + offset.y - pc.transform.position.y) * verticleBlend;
+        float depthPosition = (transform.position.z + offset.z - pc.transform.position.z) * depthBlend;
+        pc.transform.position += new Vector3(horizontalPosition, verticalPosition, depthPosition) * Time.deltaTime;
     }
 
 
