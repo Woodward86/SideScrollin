@@ -1,17 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.Networking;
 
-public class FacingController : MonoBehaviour
+public class FacingController : NetworkBehaviour
 {
 
-    void Awake()
+    public void Start()
     {
         WalkingController.OnFacingChange += RefreshFacing;
     }
 
 
-    void RefreshFacing(FacingDirection fd)
+    public void RefreshFacing(FacingDirection fd)
     {
         switch (fd)
         {

@@ -52,9 +52,15 @@ public class WalkingController : Controller
     public static event HitboxEventHandler OnInteract;
 
 
-    void Start()
+    public override void Start()
     {
-        if(OnFacingChange != null)
+        base.Start();
+
+        //TODO: Move this camera stuff onto the NetWorkManager
+        Camera.main.enabled = false;
+        pc.enabled = true;
+
+        if (OnFacingChange != null)
         {
             OnFacingChange(facing);
         }
@@ -74,6 +80,7 @@ public class WalkingController : Controller
         }
 
         //TODO: fix unlimited jump while touching walls
+        //TODO: max height of double jump is way to high
         //set vertical jump
         if (data.buttons[0] == true)
         {

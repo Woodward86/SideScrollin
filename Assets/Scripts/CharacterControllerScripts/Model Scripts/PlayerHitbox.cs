@@ -13,7 +13,7 @@ public class PlayerHitbox : MonoBehaviour {
     //collider duration
     float duration;
 
-    void Awake()
+    void Start()
     {
         WalkingController.OnFacingChange += RefreshFacing;
         WalkingController.OnInteract += StartCollisionCheck;

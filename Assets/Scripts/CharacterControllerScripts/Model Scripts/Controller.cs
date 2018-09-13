@@ -1,15 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 
 [RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(FacingController))]
-public abstract class Controller : MonoBehaviour
+public abstract class Controller : NetworkBehaviour
 {
 
-    //TODO: Add method ReadInput
     public abstract void ReadInput(InputData data);
 
     protected Rigidbody rb;
@@ -18,18 +18,19 @@ public abstract class Controller : MonoBehaviour
     protected Camera pc;
     protected bool newInput;
 
-    protected bool started;
-
-    void Awake()
+   
+    public virtual void Start()
     {
-        started = true;
+        if (!isLocalPlayer)
+        {
+            Destroy(this);
+            return;
+        }
+
         rb = GetComponent<Rigidbody>();
         coll = GetComponent<Collider>();
         fc = GetComponent<FacingController>();
         pc = GameObject.FindGameObjectWithTag("PlayerCamera").GetComponent<Camera>() as Camera;
-
-        //TODO: need to move this to a GameState controller
-        Camera.main.enabled = false;
-        pc.enabled = true;
     }
+
 }
