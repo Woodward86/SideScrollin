@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 
 public enum FacingDirection
@@ -46,9 +47,10 @@ public class WalkingController : Controller
     public LayerMask rayCastIgnore;
 
     //delegates and events
-    public delegate void FacingChangeHandler (FacingDirection fd);
-    public static event FacingChangeHandler OnFacingChange;
-    public delegate void HitboxEventHandler (float dur);
+    public delegate void FacingChangeHandler(FacingDirection fd);
+    [SyncEvent]
+    public static event FacingChangeHandler EventOnFacingChange;
+    public delegate void HitboxEventHandler(float dur);
     public static event HitboxEventHandler OnInteract;
 
 
@@ -56,13 +58,9 @@ public class WalkingController : Controller
     {
         base.Start();
 
-        //TODO: Move this camera stuff onto the NetWorkManager
-        Camera.main.enabled = false;
-        pc.enabled = true;
-
-        if (OnFacingChange != null)
+        if (EventOnFacingChange != null)
         {
-            OnFacingChange(facing);
+            EventOnFacingChange(facing);
         }
     }
 
@@ -77,6 +75,12 @@ public class WalkingController : Controller
         if (data.axes[1] != 0f)
         {
             walkVelocity += Vector3.right * data.axes[1] * walkSpeed;
+            if(data.axes[1] > 0f)
+            {
+                transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
+            }
+            else
+                transform.localRotation = Quaternion.Euler(0.0f, 180f, 0.0f);
         }
 
         //TODO: fix unlimited jump while touching walls
@@ -236,9 +240,9 @@ public class WalkingController : Controller
             facing = (dir.x > 0) ? FacingDirection.Right : FacingDirection.Left;
         }
 
-        if (OnFacingChange != null)
+        if (EventOnFacingChange != null)
         {
-            OnFacingChange(facing);
+            EventOnFacingChange(facing);
         }
 
     }

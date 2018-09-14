@@ -15,7 +15,7 @@ public class PlayerHitbox : MonoBehaviour {
 
     void Start()
     {
-        WalkingController.OnFacingChange += RefreshFacing;
+        WalkingController.EventOnFacingChange += RefreshFacing;
         WalkingController.OnInteract += StartCollisionCheck;
         col = GetComponent<BoxCollider>();
         col.enabled = false;

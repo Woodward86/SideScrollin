@@ -3,14 +3,22 @@ using UnityEngine.Networking;
 
 public class FacingController : NetworkBehaviour
 {
-
     public void Start()
     {
-        WalkingController.OnFacingChange += RefreshFacing;
+        if (!isLocalPlayer)
+        {
+            Destroy(this);
+            return;
+        }
+        if(NetworkClient.active)
+        {
+            WalkingController.EventOnFacingChange += CmdRefreshFacing;
+        }
+
     }
 
-
-    public void RefreshFacing(FacingDirection fd)
+    [Command]
+    public void CmdRefreshFacing(FacingDirection fd)
     {
         switch (fd)
         {
@@ -24,5 +32,4 @@ public class FacingController : NetworkBehaviour
         }
 
     }
-
 }
