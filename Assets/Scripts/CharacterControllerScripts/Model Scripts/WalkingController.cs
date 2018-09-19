@@ -4,16 +4,6 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 
-public enum FacingDirection
-{
-    Up, 
-    Down,
-    Left,
-    Right,
-    Screen
-}
-
-
 public class WalkingController : Controller
 {
 
@@ -25,8 +15,6 @@ public class WalkingController : Controller
 
     //movement information
     Vector3 walkVelocity;
-    Vector3 prevWalkVelocity;
-    FacingDirection facing = FacingDirection.Right;
     float adjVertVelocity;
     int jumpCounter;
     float jumpPressTime;
@@ -34,7 +22,7 @@ public class WalkingController : Controller
     bool isGrounded;
     bool isWallSliding;
     float wallSlideTime;
- 
+
 
     //settings
     public float walkSpeed = 6f;
@@ -43,31 +31,16 @@ public class WalkingController : Controller
     public float lowJumpMultiplier = 3f;
     public float wallStickTime = 1f;
     public float wallSlideSpeed = 3f;
-    public float interactDuration = 0.1f;
-    public LayerMask rayCastIgnore;
-
-    //delegates and events
-    public delegate void FacingChangeHandler(FacingDirection fd);
-    [SyncEvent]
-    public static event FacingChangeHandler EventOnFacingChange;
-    public delegate void HitboxEventHandler(float dur);
-    public static event HitboxEventHandler OnInteract;
 
 
     public override void Start()
     {
         base.Start();
-
-        if (EventOnFacingChange != null)
-        {
-            EventOnFacingChange(facing);
-        }
     }
 
 
     public override void ReadInput(InputData data)
     {
-        prevWalkVelocity = walkVelocity;
         ResetMovementToZero();
 
         //TODO: fix unlimited wall stick as long as there is input toward wall
@@ -77,14 +50,14 @@ public class WalkingController : Controller
             walkVelocity += Vector3.right * data.axes[1] * walkSpeed;
             if(data.axes[1] > 0f)
             {
-                transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
+                transform.rotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
             }
             else
-                transform.localRotation = Quaternion.Euler(0.0f, 180f, 0.0f);
+                transform.rotation = Quaternion.Euler(0.0f, 180f, 0.0f);
         }
 
         //TODO: fix unlimited jump while touching walls
-        //TODO: max height of double jump is way to high
+        //TODO: max height of double jump is way to high the second jump velocity should be added from base vert velocity not the new adjusted vert velocity
         //set vertical jump
         if (data.buttons[0] == true)
         {
@@ -99,7 +72,7 @@ public class WalkingController : Controller
 
                     //harder jump off wall
                     //TODO: decide if this should be more of an added horizontal force then vertical
-                    if (isWallSliding && facing.Equals(FacingDirection.Right))
+                    if (isWallSliding)
                     {
                         adjVertVelocity = jumpSpeed * 1.25f;
                     }
@@ -114,14 +87,10 @@ public class WalkingController : Controller
             jumpRequest = false;
         }
 
-        //TODO: in the air this activates wallSlide
         //check if interact button is pressed
         if (data.buttons[1] == true)
         {
-            if (OnInteract != null)
-            {
-                OnInteract(interactDuration);
-            }
+            Debug.Log("Interact button pressed");
         }
 
         newInput = true;
@@ -133,15 +102,9 @@ public class WalkingController : Controller
     {
         if (!newInput)
         {
-            prevWalkVelocity = walkVelocity;
             ResetMovementToZero();
             jumpPressTime = 0f;
             jumpRequest = false;
-        }
-        if (prevWalkVelocity != walkVelocity)
-        {
-            // check for face change
-            CheckForFacingChange();
         }
         if (!jumpRequest)
         {
@@ -173,11 +136,11 @@ public class WalkingController : Controller
     }
 
 
-    //TODO: replace this with Physics.OverlapBox style or add more rays
+    //TODO: replace this with Physics.OverlapBox style or add more rays 
     //TODO: add collider "skin" public variable
     void TestGroundedState()
     {
-        if (Physics.Raycast(transform.position, Vector3.down, coll.bounds.extents.y + 0.1f, ~rayCastIgnore))
+        if (Physics.Raycast(transform.position, Vector3.down, coll.bounds.extents.y + 0.1f))
         {
             isGrounded = true;
             jumpCounter = 0;
@@ -188,11 +151,11 @@ public class WalkingController : Controller
         }
     }
 
-
+ 
     void TestWallSlidingState()
     {
-        bool isContactRight = Physics.Raycast(transform.position, Vector3.right, coll.bounds.extents.x + 0.1f, ~rayCastIgnore);
-        bool isContactLeft = Physics.Raycast(transform.position, Vector3.left, coll.bounds.extents.x + 0.1f, ~rayCastIgnore);
+        bool isContactRight = Physics.Raycast(transform.position, Vector3.right, coll.bounds.extents.x + 0.1f);
+        bool isContactLeft = Physics.Raycast(transform.position, Vector3.left, coll.bounds.extents.x + 0.1f);
 
         if (isContactRight || isContactLeft && !isGrounded)
         {
@@ -201,50 +164,10 @@ public class WalkingController : Controller
             wallSlideTime += Time.deltaTime;
         }
         else
-        {
+        { 
             isWallSliding = false;
             wallSlideTime = 0f;
         }
-    }
-
-
-    void CheckForFacingChange()
-    {
-        if (walkVelocity == Vector3.zero)
-        {
-            return;
-        }
-        if (walkVelocity.x == 0)
-        {
-            ChangeFacing(walkVelocity);
-        }
-        else
-        {
-            if (prevWalkVelocity.x == 0)
-            {
-                ChangeFacing(new Vector3(walkVelocity.x, 0, 0));
-            }
-            else
-            {
-                Debug.LogWarning("Unexpected walkVelocity value.");
-                ChangeFacing(walkVelocity);
-            }
-        }
-    }
-
-
-    void ChangeFacing(Vector3 dir)
-    {
-        if (dir.x != 0)
-        {
-            facing = (dir.x > 0) ? FacingDirection.Right : FacingDirection.Left;
-        }
-
-        if (EventOnFacingChange != null)
-        {
-            EventOnFacingChange(facing);
-        }
-
     }
 
 
@@ -256,7 +179,7 @@ public class WalkingController : Controller
             rb.velocity += Vector3.up * Physics.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
         }
         //TODO: change this so it's reading from InputManager
-        else if (rb.velocity.y > 0 && !Input.GetKey(KeyCode.Space))
+        else if (rb.velocity.y > 0 && !jumpRequest)
         {
             rb.velocity += Vector3.up * Physics.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
         }

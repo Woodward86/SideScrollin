@@ -7,7 +7,7 @@ public class NetworkManager_Extension : NetworkManager {
     protected Camera sc;
     protected Camera pc;
 
-    //TODO: need to move the camera stuff onto a player based command
+    //TODO: need to move the camera stuff onto a player based command not client
 
     public override void OnStartClient(NetworkClient client)
     {
