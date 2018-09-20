@@ -16,11 +16,13 @@ public class WalkingController : Controller
     //movement information
     Vector3 walkVelocity;
     float adjVertVelocity;
+    float adjHorizVelocity;
     int jumpCounter;
     float jumpPressTime;
     bool jumpRequest;
     bool isGrounded;
     bool isCrouching;
+    float crouchPressTime;
     bool isWallSliding;
     float wallSlideTime;
 
@@ -28,6 +30,7 @@ public class WalkingController : Controller
     //settings
     public float walkSpeed = 6f;
     public float jumpSpeed = 9f;
+    public float crouchSpeed = 3f;
     public float fallMultiplier = 4.5f;
     public float lowJumpMultiplier = 3f;
     public float wallStickTime = 1f;
@@ -49,6 +52,7 @@ public class WalkingController : Controller
         if (data.axes[1] != 0f)
         {
             walkVelocity += Vector3.right * data.axes[1] * walkSpeed;
+
             //TODO: looks like the way I'm turning the character is causing issues when networked
             if(data.axes[1] > 0f)
             {
@@ -87,7 +91,20 @@ public class WalkingController : Controller
         {
             jumpPressTime = 0f;
             jumpRequest = false;
+            crouchPressTime = 0f;
+            isCrouching = false;
         }
+
+
+        //check for crouch press
+        if (data.buttons[2] == true)
+        {
+            isCrouching = true;
+            Debug.Log("Crouch pressed");
+
+            crouchPressTime += Time.deltaTime;
+        }
+
 
         //check if interact button is pressed
         if (data.buttons[1] == true)
@@ -95,12 +112,6 @@ public class WalkingController : Controller
             Debug.Log("Interact button pressed");
         }
 
-        //check for crouch press
-        if (data.buttons[3] == true)
-        {
-            isCrouching = true;
-            Debug.Log("Crouch pressed");
-        }
 
         newInput = true;
 
@@ -114,6 +125,8 @@ public class WalkingController : Controller
             ResetMovementToZero();
             jumpPressTime = 0f;
             jumpRequest = false;
+            crouchPressTime = 0f;
+            isCrouching = false;
         }
         if (!jumpRequest)
         {
@@ -130,6 +143,8 @@ public class WalkingController : Controller
         // movement modifiers
         JumpModifier();
         WallSlidingModifier();
+        //CrouchModifier();
+
 
 
         newInput = false;
@@ -178,6 +193,19 @@ public class WalkingController : Controller
             wallSlideTime = 0f;
         }
     }
+
+
+    //void CrouchModifier()
+    //{
+    //    if (isCrouching)
+    //    {
+    //        rb.velocity = walkVelocity * crouchSpeed;
+    //    }
+    //    else
+    //    {
+    //        isCrouching = false;
+    //    }
+    //}
 
 
     void JumpModifier()

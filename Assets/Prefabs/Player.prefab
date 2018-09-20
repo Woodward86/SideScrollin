@@ -300,6 +300,7 @@ MonoBehaviour:
   depthBlend: 0
   walkSpeed: 6
   jumpSpeed: 9
+  crouchSpeed: 3
   fallMultiplier: 4.5
   lowJumpMultiplier: 3
   wallStickTime: 1
