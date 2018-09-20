@@ -48,12 +48,13 @@ public class WalkingController : Controller
         if (data.axes[1] != 0f)
         {
             walkVelocity += Vector3.right * data.axes[1] * walkSpeed;
+            //TODO: looks like the way I'm turning the character is causing issues when networked
             if(data.axes[1] > 0f)
             {
-                transform.rotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
+                transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
             }
             else
-                transform.rotation = Quaternion.Euler(0.0f, 180f, 0.0f);
+                transform.localRotation = Quaternion.Euler(0.0f, 180f, 0.0f);
         }
 
         //TODO: fix unlimited jump while touching walls

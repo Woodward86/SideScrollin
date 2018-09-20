@@ -1,14 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
 
 [RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(Rigidbody))]
-public abstract class Controller : NetworkBehaviour
+public abstract class Controller : MonoBehaviour
 {
-
     public abstract void ReadInput(InputData data);
 
     protected Rigidbody rb;
@@ -19,13 +17,6 @@ public abstract class Controller : NetworkBehaviour
    
     public virtual void Start()
     {
-
-        if (!isLocalPlayer)
-        {
-            Destroy(this);
-            return;
-        }
-
         rb = GetComponent<Rigidbody>();
         coll = GetComponent<Collider>();
         pc = GameObject.FindGameObjectWithTag("PlayerCamera").GetComponent<Camera>() as Camera;
