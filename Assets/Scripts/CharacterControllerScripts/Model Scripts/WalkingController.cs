@@ -20,6 +20,7 @@ public class WalkingController : Controller
     float jumpPressTime;
     bool jumpRequest;
     bool isGrounded;
+    bool isCrouching;
     bool isWallSliding;
     float wallSlideTime;
 
@@ -92,6 +93,13 @@ public class WalkingController : Controller
         if (data.buttons[1] == true)
         {
             Debug.Log("Interact button pressed");
+        }
+
+        //check for crouch press
+        if (data.buttons[3] == true)
+        {
+            isCrouching = true;
+            Debug.Log("Crouch pressed");
         }
 
         newInput = true;

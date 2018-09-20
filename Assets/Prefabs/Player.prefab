@@ -249,7 +249,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   axisCount: 2
-  buttonCount: 3
+  buttonCount: 4
   controller: {fileID: 114646405855040538}
 --- !u!114 &114151503415393658
 MonoBehaviour:
@@ -386,7 +386,7 @@ MonoBehaviour:
     negative: 115
   - positive: 100
     negative: 97
-  buttonKeys: 200000006500000071000000
+  buttonKeys: 20000000650000007100000032010000
 --- !u!136 &136261606005508772
 CapsuleCollider:
   m_ObjectHideFlags: 1
