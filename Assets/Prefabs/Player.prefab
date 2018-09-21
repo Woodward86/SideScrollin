@@ -497,7 +497,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0316ea971421576439e882e5c8909772, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offset: {x: 7.64, y: 4.53, z: -34.4}
+  offset: {x: 6, y: 3, z: -34.4}
   verticleBlend: 10
   horizontalBlend: 1.75
   depthBlend: 0

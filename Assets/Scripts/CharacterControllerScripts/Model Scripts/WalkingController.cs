@@ -4,9 +4,16 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 
+public enum FacingDirection
+{
+    Up,
+    Down,
+    Left,
+    Right
+}
+
 public class WalkingController : Controller
 {
-
     //camera
     [SerializeField] Vector3 offset;
     [SerializeField] float verticleBlend = 10f;
@@ -15,17 +22,19 @@ public class WalkingController : Controller
 
     //movement information
     Vector3 walkVelocity;
+    FacingDirection facing = FacingDirection.Right;
     float adjVertVelocity;
     float adjHorizVelocity;
     int jumpCounter;
     float jumpPressTime;
     bool jumpRequest;
     bool isGrounded;
+    bool isContactLeft;
+    bool isContactRight;
     bool isCrouching;
     float crouchPressTime;
     bool isWallSliding;
     float wallSlideTime;
-
 
     //settings
     public float walkSpeed = 6f;
@@ -35,8 +44,6 @@ public class WalkingController : Controller
     public float lowJumpMultiplier = 3f;
     public float wallStickTime = 1f;
     public float wallSlideSpeed = 3f;
-
-    GameObject upperBody;
 
 
     public override void Start()
@@ -49,22 +56,38 @@ public class WalkingController : Controller
     {
         ResetMovementToZero();
 
-        //TODO: fix unlimited wall stick as long as there is input toward wall
         //set horizontal movement
         if (data.axes[1] != 0f)
         {
-            walkVelocity += Vector3.right * data.axes[1] * walkSpeed;
+            //unlimited wall stick fix
+            if (isContactLeft && data.axes[1] < 0)
+            {
+                walkVelocity += Vector3.right * 0f;
+            }
+            else if (isContactRight && data.axes[1] > 0)
+            {
+                walkVelocity += Vector3.right * 0f;
+            }
+            else
+            {
+                walkVelocity += Vector3.right * data.axes[1] * walkSpeed;
+            }
 
+            //set facing direction
             if(data.axes[1] > 0f)
             {
                 transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
+                facing = FacingDirection.Right;
             }
             else
+            {
                 transform.localRotation = Quaternion.Euler(0.0f, 180f, 0.0f);
+                facing = FacingDirection.Left;
+            }
+            
         }
 
-        //TODO: fix unlimited jump while touching walls
-        //      (jump counter refreshes every time a wall is hit so it contantly refreshes if you never leave the wall)
+
         //TODO: max height of double jump is way to high the second jump velocity should be added from base vert velocity not the new adjusted vert velocity
         //set vertical jump
         if (data.buttons[0] == true)
@@ -77,13 +100,28 @@ public class WalkingController : Controller
                     jumpRequest = true;
                     isGrounded = false;
                     adjVertVelocity = jumpSpeed;
+                }
 
-                    //harder jump off wall
-                    //TODO: decide if this should be more of an added horizontal force then vertical
-                    if (isWallSliding)
-                    {
-                        adjVertVelocity = jumpSpeed * 1.25f;
-                    }
+                //no vert jumping while facing the wall
+                if (isWallSliding && isContactLeft && facing == FacingDirection.Left)
+                {
+                    adjVertVelocity = 0f;
+                }
+                if (isWallSliding && isContactRight && facing == FacingDirection.Right)
+                {
+                    adjVertVelocity = 0f;
+                }
+
+                //jumping while not facing the wall
+                if (isWallSliding && isContactLeft && facing == FacingDirection.Right)
+                {
+                    adjVertVelocity = jumpSpeed * 1.25f;
+                    adjHorizVelocity = jumpSpeed;
+                }
+                if (isWallSliding && isContactRight && facing == FacingDirection.Left)
+                {
+                    adjVertVelocity = jumpSpeed * 1.25f;
+                    adjHorizVelocity = jumpSpeed;
                 }
 
             }
@@ -103,7 +141,7 @@ public class WalkingController : Controller
         }
         else
         {
-            CrouchReset();
+            ResetCrouch();
         }
 
 
@@ -126,19 +164,17 @@ public class WalkingController : Controller
         {
             ResetMovementToZero();
             ResetJump();
-            CrouchReset();
+            ResetCrouch();
         }
-        if (!jumpRequest)
-        {
-            TestGroundedState();
-            TestWallSlidingState();
-        }
+
+        TestGroundedState();
+        TestWallSlidingState();
 
         // camera movement
         CameraMovement();
 
         // basic movement
-        rb.velocity = new Vector3(walkVelocity.x, rb.velocity.y + adjVertVelocity, walkVelocity.z);
+        rb.velocity = new Vector3(walkVelocity.x + adjHorizVelocity, rb.velocity.y + adjVertVelocity, walkVelocity.z);
 
         // movement modifiers
         JumpModifier();
@@ -165,7 +201,7 @@ public class WalkingController : Controller
         if (Physics.Raycast(transform.position, Vector3.down, cColl.bounds.extents.y + 0.225f))
         {
             isGrounded = true;
-            jumpCounter = 0;
+            jumpCounter = 1;
         }
         else
         {
@@ -173,22 +209,21 @@ public class WalkingController : Controller
         }
     }
 
- 
+
     void TestWallSlidingState()
     {
-        bool isContactRight = Physics.Raycast(transform.position, Vector3.right, cColl.bounds.extents.x + 0.1f);
-        bool isContactLeft = Physics.Raycast(transform.position, Vector3.left, cColl.bounds.extents.x + 0.1f);
+        isContactRight = Physics.Raycast(transform.position, Vector3.right, cColl.bounds.extents.x + 0.1f);
+        isContactLeft = Physics.Raycast(transform.position, Vector3.left, cColl.bounds.extents.x + 0.1f);
 
-        if (isContactRight || isContactLeft && !isGrounded)
+        if (isContactLeft || isContactRight && !isGrounded)
         {
             isWallSliding = true;
-            jumpCounter = 0;
             wallSlideTime += Time.deltaTime;
+            jumpCounter = 1;
         }
         else
-        { 
-            isWallSliding = false;
-            wallSlideTime = 0f;
+        {
+            ResetWallSlide();
         }
     }
 
@@ -216,7 +251,6 @@ public class WalkingController : Controller
         {
             rb.velocity += Vector3.up * Physics.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
         }
-        //TODO: change this so it's reading from InputManager
         else if (rb.velocity.y > 0 && !jumpRequest)
         {
             rb.velocity += Vector3.up * Physics.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
@@ -227,25 +261,18 @@ public class WalkingController : Controller
     void WallSlidingModifier()
     {
         //wallSlide speed
-        if (isWallSliding)
+        if (isWallSliding && rb.velocity.y < 0 && wallSlideTime < wallStickTime)
         {
-            if (rb.velocity.y < 0 && wallSlideTime < wallStickTime)
-            {
-                rb.velocity = Vector3.up * Physics.gravity.y * wallSlideSpeed * Time.deltaTime;
-            }
-            else
-            {
-                isWallSliding = false;
-            }
+            rb.velocity = Vector3.up * Physics.gravity.y * wallSlideSpeed * Time.deltaTime;
         }
     }
 
 
-    //TODO: think about an easing function for horizontal movement so the player doesn't stop completely when input is terminated
     void ResetMovementToZero()
     {
         walkVelocity = Vector3.zero;
         adjVertVelocity = 0f;
+        adjHorizVelocity = 0f;
     }
 
 
@@ -256,9 +283,16 @@ public class WalkingController : Controller
     }
 
 
-    void CrouchReset()
+    void ResetCrouch()
     {
         crouchPressTime = 0f;
         isCrouching = false;
+    }
+
+
+    void ResetWallSlide()
+    {
+        wallSlideTime = 0f;
+        isWallSliding = false;
     }
 }
