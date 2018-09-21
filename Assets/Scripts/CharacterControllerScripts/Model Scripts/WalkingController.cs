@@ -30,11 +30,13 @@ public class WalkingController : Controller
     //settings
     public float walkSpeed = 6f;
     public float jumpSpeed = 9f;
-    public float crouchSpeed = 3f;
+    public float crouchSpeedPercent = .5f;
     public float fallMultiplier = 4.5f;
     public float lowJumpMultiplier = 3f;
     public float wallStickTime = 1f;
     public float wallSlideSpeed = 3f;
+
+    GameObject upperBody;
 
 
     public override void Start()
@@ -53,7 +55,6 @@ public class WalkingController : Controller
         {
             walkVelocity += Vector3.right * data.axes[1] * walkSpeed;
 
-            //TODO: looks like the way I'm turning the character is causing issues when networked
             if(data.axes[1] > 0f)
             {
                 transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
@@ -63,6 +64,7 @@ public class WalkingController : Controller
         }
 
         //TODO: fix unlimited jump while touching walls
+        //      (jump counter refreshes every time a wall is hit so it contantly refreshes if you never leave the wall)
         //TODO: max height of double jump is way to high the second jump velocity should be added from base vert velocity not the new adjusted vert velocity
         //set vertical jump
         if (data.buttons[0] == true)
@@ -89,25 +91,25 @@ public class WalkingController : Controller
         }
         else
         {
-            jumpPressTime = 0f;
-            jumpRequest = false;
-            crouchPressTime = 0f;
-            isCrouching = false;
+            ResetJump();
         }
 
 
         //check for crouch press
-        if (data.buttons[2] == true)
+        if (data.buttons[4] == true)
         {
             isCrouching = true;
-            Debug.Log("Crouch pressed");
-
             crouchPressTime += Time.deltaTime;
+        }
+        else
+        {
+            CrouchReset();
         }
 
 
+
         //check if interact button is pressed
-        if (data.buttons[1] == true)
+        if (data.buttons[2] == true)
         {
             Debug.Log("Interact button pressed");
         }
@@ -123,10 +125,8 @@ public class WalkingController : Controller
         if (!newInput)
         {
             ResetMovementToZero();
-            jumpPressTime = 0f;
-            jumpRequest = false;
-            crouchPressTime = 0f;
-            isCrouching = false;
+            ResetJump();
+            CrouchReset();
         }
         if (!jumpRequest)
         {
@@ -143,9 +143,7 @@ public class WalkingController : Controller
         // movement modifiers
         JumpModifier();
         WallSlidingModifier();
-        //CrouchModifier();
-
-
+        CrouchModifier();
 
         newInput = false;
     }
@@ -164,7 +162,7 @@ public class WalkingController : Controller
     //TODO: add collider "skin" public variable
     void TestGroundedState()
     {
-        if (Physics.Raycast(transform.position, Vector3.down, coll.bounds.extents.y + 0.1f))
+        if (Physics.Raycast(transform.position, Vector3.down, cColl.bounds.extents.y + 0.225f))
         {
             isGrounded = true;
             jumpCounter = 0;
@@ -178,8 +176,8 @@ public class WalkingController : Controller
  
     void TestWallSlidingState()
     {
-        bool isContactRight = Physics.Raycast(transform.position, Vector3.right, coll.bounds.extents.x + 0.1f);
-        bool isContactLeft = Physics.Raycast(transform.position, Vector3.left, coll.bounds.extents.x + 0.1f);
+        bool isContactRight = Physics.Raycast(transform.position, Vector3.right, cColl.bounds.extents.x + 0.1f);
+        bool isContactLeft = Physics.Raycast(transform.position, Vector3.left, cColl.bounds.extents.x + 0.1f);
 
         if (isContactRight || isContactLeft && !isGrounded)
         {
@@ -194,18 +192,21 @@ public class WalkingController : Controller
         }
     }
 
-
-    //void CrouchModifier()
-    //{
-    //    if (isCrouching)
-    //    {
-    //        rb.velocity = walkVelocity * crouchSpeed;
-    //    }
-    //    else
-    //    {
-    //        isCrouching = false;
-    //    }
-    //}
+    //TODO: crouch has some weird display issues when networked
+    //TODO: need to keep crouch enabled if your under somethings
+    void CrouchModifier()
+    {
+        if (isCrouching)
+        {
+            rb.velocity -= walkVelocity * crouchSpeedPercent;
+            bColl.enabled = false;
+        }
+        else
+        {
+            isCrouching = false;
+            bColl.enabled = true;
+        }
+    }
 
 
     void JumpModifier()
@@ -248,5 +249,16 @@ public class WalkingController : Controller
     }
 
 
+    void ResetJump()
+    {
+        jumpPressTime = 0f;
+        jumpRequest = false;
+    }
 
+
+    void CrouchReset()
+    {
+        crouchPressTime = 0f;
+        isCrouching = false;
+    }
 }
