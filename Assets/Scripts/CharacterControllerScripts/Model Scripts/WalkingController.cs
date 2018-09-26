@@ -40,8 +40,10 @@ public class WalkingController : Controller
 
     //settings
     public float walkSpeed = 6f;
+    public float crouchSpeedDivisor = 1.5f;
+    public float strafeSpeedDivisor = 2.5f;
     public float jumpSpeed = 9f;
-    public float crouchSpeedPercent = .5f;
+
     public float fallMultiplier = 4.5f;
     public float lowJumpMultiplier = 3f;
     public float wallStickTime = 1f;
@@ -76,17 +78,26 @@ public class WalkingController : Controller
             }
 
             //set facing direction
-            if(data.axes[1] > 0f)
+            //TODO: write isStrafing cleaner, maybe separate rotation into a different function
+            if(isStrafing)
             {
-                transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
-                facing = FacingDirection.Right;
+                rb.velocity -= walkVelocity / strafeSpeedDivisor;
             }
             else
             {
-                transform.localRotation = Quaternion.Euler(0.0f, 180f, 0.0f);
-                facing = FacingDirection.Left;
+                if (data.axes[1] > 0f)
+                {
+                    transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
+                    facing = FacingDirection.Right;
+                }
+                else
+                {
+                    transform.localRotation = Quaternion.Euler(0.0f, 180f, 0.0f);
+                    facing = FacingDirection.Left;
+                }
             }
-            
+
+
         }
 
 
@@ -148,7 +159,7 @@ public class WalkingController : Controller
 
 
         //check if interact button is pressed
-        if (data.buttons[2] == true)
+        if (data.buttons[5] == true)
         {
             isStrafing = true;
             strafePressTime += Time.deltaTime;
@@ -241,8 +252,9 @@ public class WalkingController : Controller
     {
         if (isCrouching)
         {
-            rb.velocity -= walkVelocity * crouchSpeedPercent;
+            rb.velocity -= walkVelocity / crouchSpeedDivisor;
             bColl.enabled = false;
+            isStrafing = false;
         }
         else
         {
@@ -275,11 +287,12 @@ public class WalkingController : Controller
         }
     }
 
-    //TODO: Build out strafe logic
+
     void StrafeModifier()
     {
         if (isStrafing)
         {
+            rb.velocity -= walkVelocity / strafeSpeedDivisor;
             Debug.Log("Strafing" + isStrafing);
         }
     }

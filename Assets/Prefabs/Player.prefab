@@ -463,7 +463,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   axisCount: 2
-  buttonCount: 5
+  buttonCount: 6
   controller: {fileID: 114590865739224714}
 --- !u!114 &114392458630994212
 MonoBehaviour:
@@ -502,8 +502,9 @@ MonoBehaviour:
   horizontalBlend: 1.75
   depthBlend: 0
   walkSpeed: 6
+  crouchSpeedDivisor: 2
+  strafeSpeedDivisor: 1.5
   jumpSpeed: 9
-  crouchSpeedPercent: 0.5
   fallMultiplier: 4.5
   lowJumpMultiplier: 3
   wallStickTime: 1
@@ -524,7 +525,7 @@ MonoBehaviour:
     negative: 115
   - positive: 100
     negative: 97
-  buttonKeys: 2000000032010000650000007100000030010000
+  buttonKeys: 200000003201000065000000710000006300000030010000
 --- !u!136 &136898531270324634
 CapsuleCollider:
   m_ObjectHideFlags: 1
