@@ -35,6 +35,8 @@ public class WalkingController : Controller
     float crouchPressTime;
     bool isWallSliding;
     float wallSlideTime;
+    bool isStrafing;
+    float strafePressTime;
 
     //settings
     public float walkSpeed = 6f;
@@ -145,11 +147,15 @@ public class WalkingController : Controller
         }
 
 
-
         //check if interact button is pressed
         if (data.buttons[2] == true)
         {
-            Debug.Log("Interact button pressed");
+            isStrafing = true;
+            strafePressTime += Time.deltaTime;
+        }
+        else
+        {
+            ResetStrafe();
         }
 
 
@@ -165,6 +171,7 @@ public class WalkingController : Controller
             ResetMovementToZero();
             ResetJump();
             ResetCrouch();
+            ResetStrafe();
         }
 
         TestGroundedState();
@@ -180,6 +187,7 @@ public class WalkingController : Controller
         JumpModifier();
         WallSlidingModifier();
         CrouchModifier();
+        StrafeModifier();
 
         newInput = false;
     }
@@ -267,6 +275,15 @@ public class WalkingController : Controller
         }
     }
 
+    //TODO: Build out strafe logic
+    void StrafeModifier()
+    {
+        if (isStrafing)
+        {
+            Debug.Log("Strafing" + isStrafing);
+        }
+    }
+
 
     void ResetMovementToZero()
     {
@@ -283,6 +300,13 @@ public class WalkingController : Controller
     }
 
 
+    void ResetWallSlide()
+    {
+        wallSlideTime = 0f;
+        isWallSliding = false;
+    }
+
+
     void ResetCrouch()
     {
         crouchPressTime = 0f;
@@ -290,9 +314,12 @@ public class WalkingController : Controller
     }
 
 
-    void ResetWallSlide()
+    void ResetStrafe()
     {
-        wallSlideTime = 0f;
-        isWallSliding = false;
+        strafePressTime = 0f;
+        isStrafing = false;
     }
+
+
+
 }
