@@ -75,10 +75,10 @@ public class WalkingController : Controller
             }
 
             //set facing direction
-            //TODO: write isStrafing cleaner, maybe separate rotation into a different function and check math
+            //TODO: write isStrafing cleaner, maybe separate rotation into a different function
             if(isStrafing)
             {
-                rb.velocity -= walkVelocity / strafeSpeedDivisor;
+                rb.velocity += walkVelocity / strafeSpeedDivisor;
             }
             else
             {
@@ -231,7 +231,7 @@ public class WalkingController : Controller
         isContactRight = Physics.Raycast(transform.position, Vector3.right, cColl.bounds.extents.x + 0.1f);
         isContactLeft = Physics.Raycast(transform.position, Vector3.left, cColl.bounds.extents.x + 0.1f);
 
-        if (isContactLeft || isContactRight && !isGrounded)
+        if (isContactLeft && !isGrounded || isContactRight && !isGrounded)
         {
             isWallSliding = true;
             wallSlideTime += Time.deltaTime;

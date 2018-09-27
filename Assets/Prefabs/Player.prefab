@@ -88,11 +88,12 @@ GameObject:
   - component: {fileID: 65778522031253956}
   - component: {fileID: 136898531270324634}
   - component: {fileID: 54276370094397578}
+  - component: {fileID: 114934382903483120}
   - component: {fileID: 114590865739224714}
+  - component: {fileID: 114103739587061266}
   - component: {fileID: 114231618820268344}
   - component: {fileID: 114392458630994212}
   - component: {fileID: 114145152954550222}
-  - component: {fileID: 114103739587061266}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -466,7 +467,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 230d71bfb9c7959488e3b5fea36dcdda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shotCooldown: 0.3
+  shotCooldown: 0.05
+  weaponDamage: 1
+  firePosition: {fileID: 4704602455634252}
 --- !u!114 &114145152954550222
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -514,6 +517,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 114934382903483120}
+        m_MethodName: set_enabled
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: ToggleEvenet, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   onToggleLocal:
     m_PersistentCalls:
@@ -545,6 +559,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: ToggleEvenet, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  respawnTime: 5
 --- !u!114 &114231618820268344
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -653,6 +668,18 @@ MonoBehaviour:
   - positive: 100
     negative: 97
   buttonKeys: 20000000320100000d000000710000006300000030010000
+--- !u!114 &114934382903483120
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1561150777033752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8be19bd65a580364e827d8105dc19ac8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 3
 --- !u!136 &136898531270324634
 CapsuleCollider:
   m_ObjectHideFlags: 1

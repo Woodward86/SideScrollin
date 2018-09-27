@@ -11,6 +11,7 @@ public class PlayerNetwork_Extension : NetworkBehaviour
     [SerializeField] ToggleEvenet onToggleShared;
     [SerializeField] ToggleEvenet onToggleLocal;
     [SerializeField] ToggleEvenet onToggleRemote;
+    [SerializeField] float respawnTime = 5f;
 
     void Start()
     {
@@ -45,5 +46,25 @@ public class PlayerNetwork_Extension : NetworkBehaviour
         {
             onToggleRemote.Invoke(true);
         }
+    }
+
+
+    public void Die()
+    {
+        DisablePlayer();
+
+        Invoke("Respawn", respawnTime);
+    }
+
+
+    void Respawn()
+    {
+        if(isLocalPlayer)
+        {
+            Transform spawn = NetworkManager.singleton.GetStartPosition();
+            transform.position = spawn.position;
+            transform.rotation = spawn.rotation;
+        }
+        EnablePlayer();
     }
 }

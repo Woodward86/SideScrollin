@@ -4,20 +4,16 @@ using UnityEngine.Networking;
 public class TestWeapon : Weapon
 {
 
-    public float shotCooldown = .1f;
+    public float shotCooldown = .05f;
+    public float weaponDamage = 1f;
     public Transform firePosition;
 
-    bool canShoot;
+    //bool canShoot;
     float ellapsedTime;
 
     public override void Start()
     {
         base.Start();
-
-        if (isLocalPlayer)
-        {
-            canShoot = true;
-        }
     }
 
     public override void ReadInput(InputData data)
@@ -27,9 +23,8 @@ public class TestWeapon : Weapon
 
         ellapsedTime += Time.deltaTime;
 
-        if (data.buttons[2] == true)
+        if (data.buttons[2] == true && ellapsedTime > shotCooldown)
         {
-            Debug.Log("shooting");
             ellapsedTime = 0f;
             CmdFireShot(firePosition.position, firePosition.right);
         }
@@ -63,6 +58,13 @@ public class TestWeapon : Weapon
         {
             //health stuff
             Debug.Log("hit something");
+            PlayerStats enemy = hit.transform.GetComponent<PlayerStats>();
+
+            if (enemy != null)
+            {
+                enemy.TakeDamage(weaponDamage);
+            }
+
         }
     }
 
