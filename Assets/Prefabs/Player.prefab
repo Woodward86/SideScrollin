@@ -92,6 +92,7 @@ GameObject:
   - component: {fileID: 114231618820268344}
   - component: {fileID: 114392458630994212}
   - component: {fileID: 114145152954550222}
+  - component: {fileID: 114103739587061266}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -160,7 +161,6 @@ Transform:
   m_Children:
   - {fileID: 4211650149723366}
   - {fileID: 4528994041571968}
-  - {fileID: 4704602455634252}
   m_Father: {fileID: 4401078436205400}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -189,8 +189,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4023893211659194}
-  - {fileID: 4773574160517078}
   - {fileID: 4796003306852634}
+  - {fileID: 4773574160517078}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -226,12 +226,12 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1969971685995452}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.898, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.56, y: 0, z: -0.01}
+  m_LocalScale: {x: 1.3631222, y: 6.030111, z: 5.037127}
   m_Children: []
-  m_Father: {fileID: 4023893211659194}
-  m_RootOrder: 2
+  m_Father: {fileID: 4796003306852634}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4773574160517078
 Transform:
@@ -244,7 +244,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4401078436205400}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4796003306852634
 Transform:
@@ -255,9 +255,10 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.592, y: -0.00000011921, z: -0.209}
   m_LocalScale: {x: 0.73361, y: 0.16583443, z: 0.19852588}
-  m_Children: []
+  m_Children:
+  - {fileID: 4704602455634252}
   m_Father: {fileID: 4401078436205400}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &23241952520152352
 MeshRenderer:
@@ -454,6 +455,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 0.75, z: 1}
   m_Center: {x: 0, y: 0.125, z: 0}
+--- !u!114 &114103739587061266
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1561150777033752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 230d71bfb9c7959488e3b5fea36dcdda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shotCooldown: 0.3
 --- !u!114 &114145152954550222
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -480,6 +493,17 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 65778522031253956}
+        m_MethodName: set_enabled
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 114103739587061266}
         m_MethodName: set_enabled
         m_Mode: 0
         m_Arguments:
@@ -567,6 +591,7 @@ MonoBehaviour:
   axisCount: 2
   buttonCount: 6
   controller: {fileID: 114590865739224714}
+  weapon: {fileID: 114103739587061266}
 --- !u!114 &114392458630994212
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -627,7 +652,7 @@ MonoBehaviour:
     negative: 115
   - positive: 100
     negative: 97
-  buttonKeys: 200000003201000065000000710000006300000030010000
+  buttonKeys: 20000000320100000d000000710000006300000030010000
 --- !u!136 &136898531270324634
 CapsuleCollider:
   m_ObjectHideFlags: 1

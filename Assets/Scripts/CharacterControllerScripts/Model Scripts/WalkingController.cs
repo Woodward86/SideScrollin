@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Networking;
+﻿using UnityEngine;
 
 
 public enum FacingDirection
@@ -293,7 +290,6 @@ public class WalkingController : Controller
         if (isStrafing)
         {
             rb.velocity -= walkVelocity / strafeSpeedDivisor;
-            Debug.Log("Strafing" + isStrafing);
         }
     }
 

@@ -2820,48 +2820,6 @@ Prefab:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 97f8dd5863f6c4d4daa827291f002605, type: 2}
   m_IsPrefabAsset: 0
---- !u!1001 &1685617286
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4401078436205400, guid: 2e535a866e84456449724d3f5331cd5b, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4401078436205400, guid: 2e535a866e84456449724d3f5331cd5b, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4401078436205400, guid: 2e535a866e84456449724d3f5331cd5b, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4401078436205400, guid: 2e535a866e84456449724d3f5331cd5b, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4401078436205400, guid: 2e535a866e84456449724d3f5331cd5b, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4401078436205400, guid: 2e535a866e84456449724d3f5331cd5b, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4401078436205400, guid: 2e535a866e84456449724d3f5331cd5b, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4401078436205400, guid: 2e535a866e84456449724d3f5331cd5b, type: 2}
-      propertyPath: m_RootOrder
-      value: 4
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 2e535a866e84456449724d3f5331cd5b, type: 2}
-  m_IsPrefabAsset: 0
 --- !u!4 &1699423584 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4298781332708996, guid: 97f8dd5863f6c4d4daa827291f002605,
@@ -3389,6 +3347,48 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4298781332708996, guid: 97f8dd5863f6c4d4daa827291f002605,
     type: 2}
   m_PrefabInternal: {fileID: 1131727771}
+--- !u!1001 &2115376775
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4401078436205400, guid: 2e535a866e84456449724d3f5331cd5b, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4401078436205400, guid: 2e535a866e84456449724d3f5331cd5b, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4401078436205400, guid: 2e535a866e84456449724d3f5331cd5b, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4401078436205400, guid: 2e535a866e84456449724d3f5331cd5b, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4401078436205400, guid: 2e535a866e84456449724d3f5331cd5b, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4401078436205400, guid: 2e535a866e84456449724d3f5331cd5b, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4401078436205400, guid: 2e535a866e84456449724d3f5331cd5b, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4401078436205400, guid: 2e535a866e84456449724d3f5331cd5b, type: 2}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2e535a866e84456449724d3f5331cd5b, type: 2}
+  m_IsPrefabAsset: 0
 --- !u!4 &2131428527 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4298781332708996, guid: 97f8dd5863f6c4d4daa827291f002605,

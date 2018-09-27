@@ -10,11 +10,15 @@ public class InputManager : MonoBehaviour
     public int buttonCount;
 
     public Controller controller;
+    public Weapon weapon;
 
     public void PassInput(InputData data)
     {
-        Debug.Log("Movement: " + data.axes[0] + ", " + data.axes[1]);
+        //read input from controller
         controller.ReadInput(data);
+
+        //read input from weapon
+        weapon.ReadInput(data);
     }
 
     public void RefreshTracker()
