@@ -78,7 +78,7 @@ public class WalkingController : Controller
             }
 
             //set facing direction
-            //TODO: write isStrafing cleaner, maybe separate rotation into a different function
+            //TODO: write isStrafing cleaner, maybe separate rotation into a different function and check math
             if(isStrafing)
             {
                 rb.velocity -= walkVelocity / strafeSpeedDivisor;
