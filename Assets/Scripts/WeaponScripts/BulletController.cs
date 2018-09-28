@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 
-public class BulletController : MonoBehaviour
+public class BulletController : NetworkBehaviour
 {
     //settings
     public float speed = 20f;
@@ -17,19 +18,24 @@ public class BulletController : MonoBehaviour
         rb.velocity = transform.right * speed;
 	}
 
-
+    [ServerCallback]
     void Update()
     {
         age += Time.deltaTime;
         if (age > shellLifeTime)
         {
-            Destroy(gameObject);
+            NetworkServer.Destroy(gameObject);
         }
     }
 
 
     void OnTriggerEnter(Collider hitInfo)
     {
+
+        if (!isServer)
+        {
+            return;
+        }
 
         PlayerStats enemy = hitInfo.GetComponent<PlayerStats>();
 

@@ -28,7 +28,8 @@ public class PrefabWeapon : Weapon
     [Command]
     void CmdShoot()
     {
-        Instantiate(bulletPrefab, firePosition.position, firePosition.rotation);
+        GameObject bulletInstance = Instantiate(bulletPrefab, firePosition.position, firePosition.rotation) as GameObject;
+        NetworkServer.Spawn(bulletInstance);
     }
 
 

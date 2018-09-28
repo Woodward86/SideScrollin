@@ -52,7 +52,7 @@ public class RayCastWeapon : Weapon
         if (result)
         {
             //health stuff
-            Debug.Log("hit something");
+            //Debug.Log("hit something");
             PlayerStats enemy = hit.transform.GetComponent<PlayerStats>();
 
             if (enemy != null)

@@ -131,7 +131,7 @@ public class WalkingController : Controller
                 if (isWallSliding && isContactRight && facing == FacingDirection.Left)
                 {
                     adjVertVelocity = jumpSpeed * 1.25f;
-                    adjHorizVelocity = jumpSpeed;
+                    adjHorizVelocity = -jumpSpeed;
                 }
 
             }

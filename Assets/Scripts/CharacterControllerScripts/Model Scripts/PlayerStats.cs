@@ -20,7 +20,7 @@ public class PlayerStats : NetworkBehaviour
     void OnEnable()
     {
         health = maxHealth;
-        Debug.Log(health);
+        //Debug.Log(health);
     }
 
 

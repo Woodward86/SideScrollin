@@ -11,7 +11,7 @@ public class NetworkManager_Extension : NetworkManager {
 
     public override void OnStartClient(NetworkClient client)
     {
-        Debug.Log("Client Started");
+        //Debug.Log("Client Started");
 
         //set camera
         pc = GameObject.FindGameObjectWithTag("PlayerCamera").GetComponent<Camera>() as Camera;
@@ -23,13 +23,13 @@ public class NetworkManager_Extension : NetworkManager {
 
     public override void OnStartHost()
     {
-        Debug.Log("Host Started");
+        //Debug.Log("Host Started");
     }
 
 
     public override void OnStopClient()
     {
-        Debug.Log("Client Stopped");
+        //Debug.Log("Client Stopped");
 
         //set camera
         pc.enabled = false;
@@ -39,7 +39,7 @@ public class NetworkManager_Extension : NetworkManager {
 
     public override void OnStopHost()
     {
-        Debug.Log("Host Stopped");
+        //Debug.Log("Host Stopped");
     }
 
 }

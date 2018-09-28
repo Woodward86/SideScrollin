@@ -558,7 +558,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shotCooldown: 0.05
-  weaponDamage: 1
   firePosition: {fileID: 4704602455634252}
   bulletPrefab: {fileID: 1259244033468646, guid: 8256c181e9c03cb41bf47aa1216c31a5,
     type: 2}
@@ -681,7 +680,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8be19bd65a580364e827d8105dc19ac8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 3
+  maxHealth: 100
 --- !u!136 &136898531270324634
 CapsuleCollider:
   m_ObjectHideFlags: 1
