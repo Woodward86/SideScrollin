@@ -9,6 +9,12 @@ public abstract class Weapon : NetworkBehaviour
     protected bool newInput;
     protected bool canShoot;
 
+    //weapon settings
+    public float shotCooldown = .05f;
+
+    public Transform firePosition;
+
+
     public virtual void Start()
     {
         if (isLocalPlayer)

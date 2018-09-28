@@ -4,7 +4,7 @@ using UnityEngine.Networking;
 public class PlayerStats : NetworkBehaviour
 {
 
-    [SerializeField] float maxHealth = 3f;
+    [SerializeField] float maxHealth = 100f;
 
     PlayerNetwork_Extension player;
     float health;

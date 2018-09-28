@@ -1,14 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 
-public class TestWeapon : Weapon
+public class RayCastWeapon : Weapon
 {
-
-    public float shotCooldown = .05f;
     public float weaponDamage = 1f;
-    public Transform firePosition;
-
-    //bool canShoot;
     float ellapsedTime;
 
     public override void Start()

@@ -90,10 +90,10 @@ GameObject:
   - component: {fileID: 54276370094397578}
   - component: {fileID: 114934382903483120}
   - component: {fileID: 114590865739224714}
-  - component: {fileID: 114103739587061266}
   - component: {fileID: 114231618820268344}
   - component: {fileID: 114392458630994212}
   - component: {fileID: 114145152954550222}
+  - component: {fileID: 114214824315241562}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -456,20 +456,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 0.75, z: 1}
   m_Center: {x: 0, y: 0.125, z: 0}
---- !u!114 &114103739587061266
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1561150777033752}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 230d71bfb9c7959488e3b5fea36dcdda, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  shotCooldown: 0.05
-  weaponDamage: 1
-  firePosition: {fileID: 4704602455634252}
 --- !u!114 &114145152954550222
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -506,7 +492,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 114103739587061266}
+      - m_Target: {fileID: 114214824315241562}
         m_MethodName: set_enabled
         m_Mode: 0
         m_Arguments:
@@ -560,6 +546,22 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: ToggleEvenet, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   respawnTime: 5
+--- !u!114 &114214824315241562
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1561150777033752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf0a9290ceaa48b4fb5114172ff7f7b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shotCooldown: 0.05
+  weaponDamage: 1
+  firePosition: {fileID: 4704602455634252}
+  bulletPrefab: {fileID: 1259244033468646, guid: 8256c181e9c03cb41bf47aa1216c31a5,
+    type: 2}
 --- !u!114 &114231618820268344
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -606,7 +608,7 @@ MonoBehaviour:
   axisCount: 2
   buttonCount: 6
   controller: {fileID: 114590865739224714}
-  weapon: {fileID: 114103739587061266}
+  weapon: {fileID: 114214824315241562}
 --- !u!114 &114392458630994212
 MonoBehaviour:
   m_ObjectHideFlags: 1
